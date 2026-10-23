@@ -5,7 +5,7 @@
 
 The portal lets organizers publish events and attendees register for them, with each organizer's data kept separate. It has two paths:
 
-- **Synchronous path:** web and mobile clients call the API to create, edit and browse events and to register.
+- **Synchronous path:** web and mobile clients call the API to create, edit and browse events and to register, search, query events/meetings.
 - **Asynchronous path:** event documents and details are processed in the background into a retrieval (RAG) system, so users can search events in natural language.
 
 Access controls sit in front of every data store.
@@ -27,7 +27,7 @@ flowchart LR
   end
   BE -- read / write --> PG
   BE -- read / write --> S3
-  RS -- user query --> VS
+  RS -- user query --> RS
   ML -- save --> PG
   ML -- save --> S3
   EMB -- store vectors --> VS
