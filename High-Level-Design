@@ -20,7 +20,10 @@ Process Workflows:
 
 Organizer -> Create/Edit/Update/Delete Events -> Add metadata and fields for events in DB, supportingdocuments in S3, adds entry to a kafka queue -> picked up by a process that talks to embedding model -> vector store
 
-Attendee -> 
+Attendee -> Registration -> Auth -> added to approval queue -> Notification in approver dashboard -> approved -> added to events DB in the participants table.
+
+
+
 
 
 
