@@ -77,7 +77,7 @@ flowchart LR
 2. All events are queued and fed to an alert management system
 3. Alerts are analyzed and grouped in the DB by the system using dedup/classification; overwrites or adds to the alerts table
 4. Critical alerts are sent to on-call agents.
-5. A separate process uses ML to analyze alerts against historical events, logs etc and suggests resolution. Resolution is added to the alerts DB.
+5. A separate process uses llm to analyze alerts and an Agent canbe used to query logs, historical incident db, resolution plans etc and come up with suggested resolution. Resolution is added to the alerts DB.
    
 ## AWS multi-region installation
 
