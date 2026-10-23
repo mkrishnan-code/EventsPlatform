@@ -1,0 +1,28 @@
+Step 1: Recording incidents
+
+incidents: id, event_id, reported_by, source, category, reported_severity, title, description, location, occurred_at, reported_at, attachments
+
+Step 2: Queuing incidents for Kafka
+
+outbox: id, topic, message_key, payload, created_at, published_at, attempts, last_error
+
+Step 3: Grouping incidents into alerts
+
+alerts: id, event_id, dedup_key, classification, classifier_version, severity, status, title, summary, occurrence_count, first_seen_at, last_seen_at, acknowledged_by, acknowledged_at, resolved_by, resolved_at, resolution_notes, version, created_at, updated_at
+alert_incidents: alert_id, incident_id, match_score, linked_at
+alert_history: id, alert_id, version, action, changed_by, old_values, new_values, changed_at
+
+Step 4: Paging on-call agents
+
+oncall_agents: id, user_id, name, email, phone, active
+oncall_shifts: id, agent_id, event_id, escalation_level, shift (time range)
+alert_notifications: id, alert_id, agent_id, escalation_level, channel, status, provider_message_id, queued_at, sent_at, acknowledged_at, error
+
+Step 5: ML resolution suggestions
+
+resolution_suggestions: id, alert_id, model_name, model_version, suggestion, steps, confidence, rank, similar_alert_ids, evidence, status, reviewed_by, reviewed_at, feedback, created_at
+
+Reference tables (owned by the portal)
+
+tenants: id, name, created_at
+events: id, title, venue, start_time, end_time
