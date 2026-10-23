@@ -27,7 +27,7 @@ flowchart LR
   end
   BE -- read / write --> PG
   BE -- read / write --> S3
-  RS -- user query --> PR {PII Redaction] --> RS
+  RS -- user query --> RS
   ML -- save --> PG
   ML -- save --> S3
   EMB -- store vectors --> VS
