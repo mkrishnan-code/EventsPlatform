@@ -1,0 +1,28 @@
+High Level Design:
+
+Sycnhronous access
+UI/Web Mobile App -> ELB -> API gateway (routing) -> Backend servers -> Data Store in relational DB, files and S3
+
+Async Backend process - Build a RAG system
+
+Documents and details about events -> ML system for classification/dedup/high-level extraction -> Store Data in S3/files and Postgres, add to queue, Data is vectorized (embedding model), stored
+in vector stores, retrieval service in place for retriving based on user query
+
+Access controls in place in front of all data stores.
+
+
+Choice of Tools:
+
+AWS infrastructure with EC2 instances, S3, relational DB, AMI access restrictions in place, Data store encrytion at rest and transit, React for Web design for interactive, mobile interfaces, FastAPI for backend server and auth, postgresql for relationalDB, AWS with S3 storage for supporting files
+Other theird party tools, like Calendar, travel agents are linked to the frontend tools. Data linked to third party tools are non-senstive like event date, sessions etc.
+
+Process Workflows:
+
+Organizer -> Create/Edit/Update/Delete Events -> Add metadata and fields for events in DB, supportingdocuments in S3, adds entry to a kafka queue -> picked up by a process that talks to embedding model -> vector store
+
+Attendee -> 
+
+
+
+
+
