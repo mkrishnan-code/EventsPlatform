@@ -90,7 +90,7 @@ Run the full stack in at least two regions based on enterprise locations and acc
 | DNS | Health checks on each region's load balancer | Route 53 latency-based routing sends users to the nearest healthy region |
 | Web and mobile assets | React assets can be served via cloudfront
 | Load balancer and API gateway | ELB and API Gateway | Same configuration deployed to both regions | API gateway can be autoscaled - eg nginx using kubernetes/docker
-| Backend (FastAPI) | EC2 Auto Scaling group across at least 2 availability zones | Authentication reaching out to enterprise specific user accounts |
+| Backend (FastAPI) | EC2 replication in least 2 availability zones | Dockerized and use of Kubernetes for auto scaling | Authentication reaching out to enterprise specific user accounts |
 | PostgreSQL | Aurora PostgreSQL cluster | Aurora Global Database: one writer region, read-only replica in the secondary, managed failover |
 | Supporting files | S3 bucket | S3 Cross-Region Replication between the buckets |
 | Kafka | Amazon MSK cluster | MSK Replicator copies the event topics to the other region |
