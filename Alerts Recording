@@ -6,13 +6,13 @@ Step 2: Queuing incidents for Kafka
 
 outbox: id, topic, message_key, payload, created_at, published_at, attempts, last_error
 
-Step 3: Grouping incidents into alerts
+Step 3: Grouping incidents into alerts - Small ML models can be used to dedup/triage/classify incidents
 
-alerts: id, event_id, dedup_key, classification, classifier_version, severity, status, title, summary, occurrence_count, first_seen_at, last_seen_at, acknowledged_by, acknowledged_at, resolved_by, resolved_at, resolution_notes, version, created_at, updated_at
+alerts: id, event_id, classification, classifier_version, severity, status, title, summary, occurrence_count, first_seen_at, last_seen_at, acknowledged_by, acknowledged_at, resolved_by, resolved_at, resolution_notes, version, created_at, updated_at
 alert_incidents: alert_id, incident_id, match_score, linked_at
 alert_history: id, alert_id, version, action, changed_by, old_values, new_values, changed_at
 
-Step 4: Paging on-call agents
+Step 4: On-call agents store
 
 oncall_agents: id, user_id, name, email, phone, active
 oncall_shifts: id, agent_id, event_id, escalation_level, shift (time range)
