@@ -1,10 +1,10 @@
 Step 1: Recording incidents
 
-incidents: id, event_id, reported_by, source, category, reported_severity, title, description, location, occurred_at, reported_at, attachments
+incidents: id, tenant_id, event_id, reported_by, source, category, reported_severity, title, description, location, occurred_at, reported_at, attachments
 
 Step 2: Queuing incidents for Kafka
 
-outbox: id, topic, message_key, payload, created_at, published_at, attempts, last_error
+outbox: id, topic, message_key, payload, created_at, published_at, attempts, last_error, tenant_id
 
 Step 3: Grouping incidents into alerts - Small ML models can be used to dedup/triage/classify incidents
 
@@ -12,13 +12,13 @@ alerts: id, event_id, classification, classifier_version, severity, status, titl
 alert_incidents: alert_id, incident_id, match_score, linked_at
 alert_history: id, alert_id, version, action, changed_by, old_values, new_values, changed_at
 
-Step 4: On-call agents store
+Step 4: On-call agents store per tenant in seprate tables
 
 oncall_agents: id, user_id, name, email, phone, active
 oncall_shifts: id, agent_id, event_id, escalation_level, shift (time range)
 alert_notifications: id, alert_id, agent_id, escalation_level, channel, status, provider_message_id, queued_at, sent_at, acknowledged_at, error
 
-Step 5: ML resolution suggestions
+Step 5: AI resolution suggestions - with access to specifc tenant data - will happen outside the loop to aid resolution and will not block. If past historical incident data is available, use RAG
 
 resolution_suggestions: id, alert_id, model_name, model_version, suggestion, steps, confidence, rank, similar_alert_ids, evidence, status, reviewed_by, reviewed_at, feedback, created_at
 
