@@ -1,4 +1,4 @@
-For unpredictable loads , we can use scaled downstream processes, dockerized and orchestrated with Kubernetes, 
+For unpredictable loads , we can use scaled downstream processes, autoscaling of ec2 instances as needed, services dockerized and orchestrated with Kubernetes, 
 
 Event Day, processes that query the DB forinformation will be overlaoded. Read Replicas and backup of DB is critical.
 
