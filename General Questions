@@ -1,0 +1,6 @@
+General Questions:
+
+Using of COTS is better when the core functionality is orthognal to our solutions and problems. FOr example calendars and travel agents can be integrated without
+affecting architecture. Also data sharing can be done without exposing critical data
+
+Event day critical paths can be isolated by having a dedicated process at the backend and a queue to handle special requests
