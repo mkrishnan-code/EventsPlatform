@@ -71,6 +71,14 @@ flowchart LR
 4. The approver gets a notification in their dashboard.
 5. Once approved, the attendee is added to the participants table in the events database.
 
+##Event Day Incidents
+
+1. Event Day incidents are recorded via the portal in a DB
+2. All events are queued and fed to an alert management system
+3. Alerts are analyzed and grouped in the DB by the system using dedup/classification; overwrites or adds to the alerts table
+4. Critical alerts are sent to on-call agents.
+5. A separate process uses ML to analyze alerts against historical events, logs etc and suggests resolution. Resolution is added to the alerts DB.
+   
 ## AWS multi-region installation
 
 Run the full stack in at least two regions based on enterprise locations and accessibility. The stateless tiers serve traffic in every region, PostgreSQL takes writes in the primary region, and every data store replicates to the secondary so it can take over if the primary fails.
