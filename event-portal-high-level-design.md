@@ -1,6 +1,5 @@
 # Event Portal: High-Level Design
 
-Oct 23, 2026 · Magi
 
 ## Overview
 
@@ -74,43 +73,42 @@ flowchart LR
 
 ## AWS multi-region installation
 
-Run the full stack in at least two regions (for example us-east-1 as primary and us-west-2 as secondary). The stateless tiers serve traffic in every region, PostgreSQL takes writes in the primary region, and every data store replicates to the secondary so it can take over if the primary fails.
+Run the full stack in at least two regions based on enterprise locations and accessibility. The stateless tiers serve traffic in every region, PostgreSQL takes writes in the primary region, and every data store replicates to the secondary so it can take over if the primary fails.
 
 ### Components per region
 
 | Component | In each region | Cross-region setup |
 | --- | --- | --- |
 | DNS | Health checks on each region's load balancer | Route 53 latency-based routing sends users to the nearest healthy region |
-| Web and mobile assets | React build in S3 | CloudFront serves the static UI globally |
-| Load balancer and API gateway | ELB and API Gateway | Same configuration deployed to both regions |
-| Backend (FastAPI) | EC2 Auto Scaling group across at least 2 availability zones | AMI copied to each region; servers are stateless (JWT auth, no local sessions) |
+| Web and mobile assets | React assets can be served via cloudfront
+| Load balancer and API gateway | ELB and API Gateway | Same configuration deployed to both regions | API gateway can be autoscaled - eg nginx using kubernetes/docker
+| Backend (FastAPI) | EC2 Auto Scaling group across at least 2 availability zones | Authentication reaching out to enterprise specific user accounts |
 | PostgreSQL | Aurora PostgreSQL cluster | Aurora Global Database: one writer region, read-only replica in the secondary, managed failover |
 | Supporting files | S3 bucket | S3 Cross-Region Replication between the buckets |
 | Kafka | Amazon MSK cluster | MSK Replicator copies the event topics to the other region |
-| Embedding workers and vector store | Workers consume the local Kafka topic and write to a local vector store | Each region builds its own index from replicated data, so nothing extra to sync |
+| Embedding workers and vector store | Workers consume the local Kafka topic and write to a local vector store | Vector stores are partitioned by enterprise as well as events
 | Secrets and keys | Secrets Manager, KMS | Replicated secrets and KMS multi-region keys, so encrypted data opens in both regions |
 
 ### Handling writes
 
-Reads are served locally in every region. Writes (event changes, registrations, approvals) go to the primary region's database: the secondary region either forwards them to the primary API or uses Aurora write forwarding. Aurora replication lag is typically under a second, so a just-saved event can briefly be missing from secondary reads.
+Reads are served locally in every region. Writes (event changes, registrations, approvals) go to the primary region's database. Read replicas may have stale data but eventual consistency will be there
 
 ### Failover
 
-1. Route 53 health checks mark the primary region unhealthy and route all traffic to the secondary.
-2. Promote the secondary Aurora cluster to writer (Aurora Global Database managed failover).
-3. Point the backend's write path to the new writer, ideally through a config value or DNS name rather than a redeploy.
+1. Route 53 health checks; use secondary backup system in different region
+2. Database failovers managed with backup secondary stores
+3. Point the backend's write path to the new writer, ideally through a config value
 4. Kafka consumers in the secondary continue from the replicated topics.
 5. When the old primary recovers, rejoin it as the secondary and fail back in a planned window.
 
 ### Installation steps
 
-1. Define all infrastructure as code (Terraform or CloudFormation StackSets) with the region as a parameter.
+1. CloudFormation used for deployment in multiple regions
 2. Create the VPC, subnets across at least 2 availability zones, and security groups in each region.
 3. Create KMS multi-region keys and replicate secrets.
 4. Create the Aurora Global Database, the S3 buckets with replication, and the MSK clusters with MSK Replicator.
 5. Build the backend AMI once, copy it to each region, and create the Auto Scaling groups behind ELB and API Gateway.
 6. Deploy the embedding workers and vector store in each region.
 7. Publish the React build to S3 behind CloudFront.
-8. Set up Route 53 health checks and latency-based records, then run a failover drill before go-live.
 
-If some tenants must keep data in one geography, give each tenant a home region and route its writes there instead of to a single global primary.
+
