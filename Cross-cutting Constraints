@@ -1,0 +1,9 @@
+For unpredictable loads , we can use scaled downstream processes, dockerized and orchestrated with Kubernetes, 
+
+Event Day, processes that query the DB forinformation will be overlaoded. Read Replicas and backup of DB is critical.
+
+Error Handling incorporated in each system, incident alerts are queued and sent to on-call agents
+
+
+
+
